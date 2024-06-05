@@ -20,6 +20,9 @@ ul.category-list {
         &:hover {
             color: var(--mona-primary-light);
         }
+        &.selected {
+            color: var(--mona-primary-light);
+        }
     }
 }
 

@@ -1,7 +1,7 @@
 <div>
-    <mona-text-box class="search-box px-2" placeholder="Search widget">
+    <mona-text-box class="search-box" placeholder="Search widget">
         <ng-template monaTextBoxPrefixTemplate>
-            <i class="ri-search-line"></i>
+            <i class="ri-search-line px-1"></i>
         </ng-template>
     </mona-text-box>
 </div>
@@ -14,13 +14,13 @@
                 } @else {
                     <i class="ri-arrow-right-s-line"></i>
                 }
-                <span>{{category.name}}</span>
+                <span>{{category.name}} | {{routePath()}}</span>
             </div>
             @if (category.open) {
                 <ul class="category-list" @menuExpand>
                     @for (widget of category.widgets; track widget) {
                         <li class="widget">
-                            <a href="{{widget.path}}" class="component-link">
+                            <a [routerLink]="widget.path" class="component-link" [class.selected]="widget.path===routePath()">
                                 <span>{{widget.name}}</span>
                             </a>
                         </li>

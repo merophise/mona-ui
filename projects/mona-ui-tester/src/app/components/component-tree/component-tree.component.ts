@@ -1,5 +1,7 @@
 import { animate, style, transition, trigger } from "@angular/animations";
-import { ChangeDetectionStrategy, Component } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, Input, input } from "@angular/core";
+import { toSignal } from "@angular/core/rxjs-interop";
+import { Router, RouterLink } from "@angular/router";
 import {
     TextBoxComponent,
     TextBoxPrefixTemplateDirective,
@@ -7,6 +9,7 @@ import {
     TreeViewExpandableDirective,
     TreeViewNodeTemplateDirective
 } from "mona-ui";
+import { map } from "rxjs";
 import { Category } from "../../data/ComponentTreeDataItem";
 
 @Component({
@@ -17,7 +20,8 @@ import { Category } from "../../data/ComponentTreeDataItem";
         TreeViewExpandableDirective,
         TreeViewNodeTemplateDirective,
         TextBoxComponent,
-        TextBoxPrefixTemplateDirective
+        TextBoxPrefixTemplateDirective,
+        RouterLink
     ],
     templateUrl: "./component-tree.component.html",
     styleUrl: "./component-tree.component.scss",
@@ -33,6 +37,7 @@ import { Category } from "../../data/ComponentTreeDataItem";
     ]
 })
 export class ComponentTreeComponent {
+    readonly #router = inject(Router);
     protected readonly menuData: Category[] = [
         {
             name: "Buttons",
@@ -82,8 +87,28 @@ export class ComponentTreeComponent {
             widgets: []
         }
     ];
+    protected readonly routePath = toSignal(this.#router.events.pipe(map(() => this.#router.url.substring(1))), {
+        initialValue: ""
+    });
+
+    public constructor() {
+        effect(() => {
+            this.openParentOfPath(this.routePath());
+        });
+    }
 
     public onCategoryToggle(category: Category): void {
         category.open = !category.open;
+    }
+
+    private openParentOfPath(path: string): void {
+        for (const category of this.menuData) {
+            for (const widget of category.widgets) {
+                if (widget.path === path) {
+                    category.open = true;
+                    return;
+                }
+            }
+        }
     }
 }
