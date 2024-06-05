@@ -1,0 +1,32 @@
+<div>
+    <mona-text-box class="search-box px-2" placeholder="Search widget">
+        <ng-template monaTextBoxPrefixTemplate>
+            <i class="ri-search-line"></i>
+        </ng-template>
+    </mona-text-box>
+</div>
+<ul class="component-menu-list pt-4">
+    @for (category of menuData; track category) {
+        <li class="category">
+            <div class="category-name" (click)="onCategoryToggle(category)">
+                @if (category.open) {
+                    <i class="ri-arrow-down-s-line"></i>
+                } @else {
+                    <i class="ri-arrow-right-s-line"></i>
+                }
+                <span>{{category.name}}</span>
+            </div>
+            @if (category.open) {
+                <ul class="category-list" @menuExpand>
+                    @for (widget of category.widgets; track widget) {
+                        <li class="widget">
+                            <a href="{{widget.path}}" class="component-link">
+                                <span>{{widget.name}}</span>
+                            </a>
+                        </li>
+                    }
+                </ul>
+            }
+        </li>
+    }
+</ul>

@@ -1,0 +1,44 @@
+.component-menu-list {
+    color: var(--mona-text);
+    background-color: var(--mona-background);
+    height: 100%;
+    user-select: none;
+}
+
+i {
+    font-size: 20px;
+}
+
+ul.category-list {
+    overflow: hidden;
+    & li a {
+        width: 100%;
+        padding: 0.5rem 0.5rem 0.5rem 3rem;
+        cursor: pointer;
+        display: inline-block;
+        font-size: 0.875em;
+        &:hover {
+            color: var(--mona-primary-light);
+        }
+    }
+}
+
+div.category-name {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding-left: 0.25rem;
+    font-size: 1em;
+    font-weight: 500;
+    cursor: pointer;
+    &:hover {
+        color: var(--mona-primary-light);
+    }
+}
+
+.search-box {
+    border-left: none;
+    border-right: none;
+    background-color: var(--mona-background-lighter);
+    color: var(--mona-text);
+}
