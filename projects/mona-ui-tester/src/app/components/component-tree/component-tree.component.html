@@ -9,14 +9,14 @@
     @for (category of menuData; track category) {
         <li class="category">
             <div class="category-name" (click)="onCategoryToggle(category)">
-                @if (category.open) {
+                @if (category.open()) {
                     <i class="ri-arrow-down-s-line"></i>
                 } @else {
                     <i class="ri-arrow-right-s-line"></i>
                 }
-                <span>{{category.name}} | {{routePath()}}</span>
+                <span>{{category.name}}</span>
             </div>
-            @if (category.open) {
+            @if (category.open()) {
                 <ul class="category-list" @menuExpand>
                     @for (widget of category.widgets; track widget) {
                         <li class="widget">

@@ -1,6 +1,8 @@
+import { WritableSignal } from "@angular/core";
+
 export interface Category {
     name: string;
-    open: boolean;
+    open: WritableSignal<boolean>;
     widgets: Widget[];
 }
 

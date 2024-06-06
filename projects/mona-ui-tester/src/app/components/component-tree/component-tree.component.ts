@@ -1,7 +1,7 @@
 import { animate, style, transition, trigger } from "@angular/animations";
-import { ChangeDetectionStrategy, Component, effect, inject, Input, input } from "@angular/core";
+import { ChangeDetectionStrategy, Component, effect, inject, Input, input, signal } from "@angular/core";
 import { toSignal } from "@angular/core/rxjs-interop";
-import { Router, RouterLink } from "@angular/router";
+import { NavigationEnd, Router, RouterLink } from "@angular/router";
 import {
     TextBoxComponent,
     TextBoxPrefixTemplateDirective,
@@ -41,7 +41,7 @@ export class ComponentTreeComponent {
     protected readonly menuData: Category[] = [
         {
             name: "Buttons",
-            open: false,
+            open: signal(false),
             widgets: [
                 {
                     name: "Button",
@@ -55,7 +55,7 @@ export class ComponentTreeComponent {
         },
         {
             name: "Date Inputs",
-            open: false,
+            open: signal(false),
             widgets: [
                 {
                     name: "Calendar",
@@ -69,7 +69,7 @@ export class ComponentTreeComponent {
         },
         {
             name: "Dropdowns",
-            open: false,
+            open: signal(false),
             widgets: [
                 {
                     name: "Auto Complete",
@@ -83,29 +83,31 @@ export class ComponentTreeComponent {
         },
         {
             name: "Editor",
-            open: false,
+            open: signal(false),
             widgets: []
         }
     ];
-    protected readonly routePath = toSignal(this.#router.events.pipe(map(() => this.#router.url.substring(1))), {
-        initialValue: ""
-    });
+    protected readonly routePath = signal("");
 
-    public constructor() {
-        effect(() => {
-            this.openParentOfPath(this.routePath());
+    public ngOnInit(): void {
+        this.#router.events.subscribe(event => {
+            if (event instanceof NavigationEnd) {
+                const path = event.url.substring(1);
+                this.routePath.set(path);
+                this.openParentOfPath(path);
+            }
         });
     }
 
     public onCategoryToggle(category: Category): void {
-        category.open = !category.open;
+        category.open.set(!category.open());
     }
 
     private openParentOfPath(path: string): void {
         for (const category of this.menuData) {
             for (const widget of category.widgets) {
                 if (widget.path === path) {
-                    category.open = true;
+                    category.open.set(true);
                     return;
                 }
             }
